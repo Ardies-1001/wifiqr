@@ -19,8 +19,19 @@ export async function POST({ request }) {
     
     console.log('Génération QR code pour:', wifiString);
     
-    // Générer le QR code avec des options simplifiées
-    const qrUrl = await QRCode.toDataURL(wifiString);
+    // Générer le QR code avec des options optimisées pour réduire la taille
+    const qrOptions = {
+      errorCorrectionLevel: 'M',  // 'L', 'M', 'Q', 'H'
+      type: 'image/png',
+      quality: 0.8,
+      margin: 2,
+      color: {
+        dark: '#000000',
+        light: '#FFFFFF'
+      }
+    };
+    
+    const qrUrl = await QRCode.toDataURL(wifiString, qrOptions);
     
     console.log('QR code généré avec succès, longueur:', qrUrl.length);
     

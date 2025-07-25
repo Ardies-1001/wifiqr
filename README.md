@@ -43,7 +43,7 @@ vercel --prod
 ---
 
 ### Share
-Live demo: `https://wifiqr.vercel.app`
+Live demo: `https://wifiqr-two.vercel.app/`
 
 ---
 
