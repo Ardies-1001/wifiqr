@@ -1,6 +1,6 @@
-# WiFi QR-Code Factory
+# WiFi QR-Code 
 
-Instantly create a scannable Wi-Fi QR code—no app, no typing, no fuss.
+Instantly create a scannable Wi-Fi QR code - no app, no typing, no fuss.
 
 ---
 
