@@ -1,43 +1,50 @@
-# Astro Starter Kit: Minimal
+# WiFi QR-Code Factory
 
-```sh
-npm create astro@latest -- --template minimal
+Instantly create a scannable Wi-Fi QR code—no app, no typing, no fuss.
+
+---
+
+### What it does
+1. Type your **SSID**, **password**, and **security** mode.  
+2. Hit **Generate**.  
+3. Flash the generated QR code to any phone or laptop and connect in one tap.
+
+---
+
+### Tech stack
+- **Frontend:** Astro (vanilla)  
+- **API endpoint:** `POST /api/generate-qr` — returns a Base64 PNG  
+- **QR lib:** `qrcode` (server-side)  
+- **Deploy:** Vercel (push-to-deploy)
+
+---
+
+### Run locally
+```bash
+git clone https://github.com/Ardies-1001/wifiqr.git
+cd wifiqr
+npm install
+npm run dev      # open http://localhost:4321
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+---
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+### Deploy in 30 s
+```bash
+vercel --prod
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+---
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+### Customize
+- **Colours & fonts:** edit the `<style>` block in `src/pages/index.astro`.  
+- **Logo or frame:** tweak `POST /api/generate-qr` options in `src/pages/api/generate-qr.ts`.
 
-Any static assets, like images, can be placed in the `public/` directory.
+---
 
-## 🧞 Commands
+### Share
+Live demo: `https://wifiqr.vercel.app`
 
-All commands are run from the root of the project, from a terminal:
+---
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Made in one evening by **Ardies Lebon** — network engineer who got tired of spelling passwords.

@@ -1,16 +1,256 @@
 ---
-
+// Aucun import nécessaire, la génération du QR code est gérée par l'API
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>WiFi QR-Code</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      :root {
+        --bg: #0d0d0d;
+        --card: #1a1a1a;
+        --accent: #00e5ff;
+        --text: #fff;
+        --muted: #8a8a8a;
+        --radius: 12px;
+        --font: "Segoe UI", system-ui, sans-serif;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font);
+        padding: 1rem;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid #333;
+        border-radius: var(--radius);
+        padding: 2rem;
+        width: 100%;
+        max-width: 380px;
+        box-shadow: 0 0 20px rgba(0, 229, 255, 0.25);
+      }
+      h1 {
+        text-align: center;
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        color: var(--accent);
+      }
+      label {
+        display: block;
+        margin: 0.75rem 0 0.25rem;
+        font-size: 0.9rem;
+        color: var(--muted);
+      }
+      input,
+      select {
+        width: 100%;
+        padding: 0.6rem 0.75rem;
+        border-radius: var(--radius);
+        border: 1px solid #333;
+        background: #111;
+        color: var(--text);
+        font-size: 1rem;
+      }
+      input:focus,
+      select:focus {
+        outline: none;
+        border-color: var(--accent);
+      }
+      button {
+        width: 100%;
+        margin-top: 1.25rem;
+        padding: 0.75rem;
+        border: none;
+        border-radius: var(--radius);
+        background: var(--accent);
+        color: #000;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      button:hover {
+        filter: brightness(1.15);
+      }
+      .hidden {
+        display: none;
+      }
+      #output {
+        margin-top: 1.5rem;
+        text-align: center;
+      }
+      /* #output {
+        margin-top: 1.5rem;
+        text-align: center;
+        margin-top: 1.5rem;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      } */
+      #qr {
+        max-width: 220px;
+        height: auto;
+        border-radius: var(--radius);
+        margin-bottom: 0.75rem;
+      }
+      #download {
+        display: block;
+        width: auto;
+        margin: 0 auto;
+        margin-top: 1rem;
+        padding: 0.6rem 1.5rem;
+        border: none;
+        border-radius: var(--radius);
+        background: var(--accent);
+        color: #000;
+        font-weight: 700;
+        font-size: 1rem;
+        cursor: pointer;
+        text-decoration: none;
+        transition: filter 0.15s;
+      }
+
+      #download:hover {
+        filter: brightness(1.1);
+      }
+      footer {
+        margin-top: 2rem;
+        color: var(--muted);
+        font-size: 0.6rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <h1>WiFi QR-Code</h1>
+
+      <label>SSID</label>
+      <input id="ssid" type="text" placeholder="Mon Réseau (Nom)" />
+
+      <label>Mot de passe</label>
+      <div style="position:relative;">
+        <input
+          id="pwd"
+          type="password"
+          placeholder="••••••••"
+          style="padding-right:2.5rem;"
+        />
+        <button
+          type="button"
+          id="togglePwd"
+          style="position:absolute;right:5px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);font-size:1rem;cursor:pointer;padding:0;"
+        >
+          👁️
+        </button>
+      </div>
+
+      <label>Sécurité</label>
+      <select id="sec">
+        <option value="WPA">WPA/WPA2</option>
+        <option value="WEP">WEP</option>
+        <option value="nopass">Aucune</option>
+      </select>
+
+      <button id="generate">Générer</button>
+
+      <div id="output" class="hidden">
+        <img id="qr" alt="QR Code WiFi" />
+        <a
+          id="download"
+          href="#"
+          style="margin:0 auto;margin-top:12px;"
+          download="wifi-qr.png">Télécharger PNG</a
+        >
+      </div>
+    </main>
+
+    <footer>
+      <small
+        >by <strong>Ardies Lebon</strong> — Ingénieur Réseau & Dev Full-Stack</small
+      >
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const ssid = document.getElementById("ssid");
+        const pwd = document.getElementById("pwd");
+        const sec = document.getElementById("sec");
+        const btn = document.getElementById("generate");
+        const out = document.getElementById("output");
+        const qr = document.getElementById("qr");
+        const dl = document.getElementById("download");
+
+        const togglePwd = document.getElementById("togglePwd");
+        togglePwd.addEventListener("click", () => {
+          pwd.type = pwd.type === "password" ? "text" : "password";
+          togglePwd.textContent = pwd.type === "password" ? "👁️" : "🙈";
+        });
+
+        btn.addEventListener("click", async () => {
+          try {
+            const s = ssid.value.trim();
+            const p = pwd.value.trim();
+            const t = sec.value;
+            if (!s) return alert("SSID requis");
+            if (!p) return alert("Password requis");
+
+            // Affichage d'un indicateur de chargement
+            btn.textContent = "Génération...";
+            btn.disabled = true;
+
+            // Création de la chaîne de format WiFi
+            const wifiString =
+              t === "nopass"
+                ? `WIFI:T:nopass;S:${s};;`
+                : `WIFI:T:${t};S:${s};P:${p};;`;
+
+            // Call d'API pour générer le QR code
+            const response = await fetch("/api/generate-qr", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ wifiString }),
+            });
+
+            let data;
+            if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(
+                errorData.error +
+                  (errorData.details ? ": " + errorData.details : "")
+              );
+            } else {
+              data = await response.json();
+            }
+
+            // Mise à jour de l'image et du lien de téléchargement
+            qr.src = data.qrUrl;
+            dl.href = data.qrUrl;
+            out.classList.remove("hidden");
+          } catch (error) {
+            console.error(error);
+            alert("Erreur lors de la génération du QR code: " + error.message);
+          } finally {
+            // Restaurer le bouton
+            btn.textContent = "Générer";
+            btn.disabled = false;
+          }
+        });
+      });
+    </script>
+  </body>
 </html>
